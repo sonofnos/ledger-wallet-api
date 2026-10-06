@@ -1,0 +1,18 @@
+# Non-default host port on purpose: other local projects already bind 5432.
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ledger
+      POSTGRES_PASSWORD: ledger
+      POSTGRES_DB: ledger_wallet
+    ports: ['5443:5432']
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ledger']
+      interval: 3s
+      retries: 10
+    volumes:
+      - ledger_wallet_pg:/var/lib/postgresql/data
+
+volumes:
+  ledger_wallet_pg:

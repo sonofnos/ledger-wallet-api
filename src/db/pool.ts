@@ -22,7 +22,7 @@ export function getPool(): Pool {
     // node-postgres gotcha: an idle client that loses its connection (e.g.
     // the server going away) emits 'error' on the Pool. With no listener,
     // that's an unhandled 'error' event, which Node treats as fatal and
-    // crashes the process — hit this for real when a Testcontainers
+    // crashes the process. Hit this for real when a Testcontainers
     // Postgres stopped at the end of a test run while the pool still had
     // idle connections open. Logging and swallowing it is the documented
     // fix; the pool removes the broken client and keeps serving new ones.

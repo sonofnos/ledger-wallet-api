@@ -2,7 +2,7 @@ import { PostgreSqlContainer, StartedPostgreSqlContainer } from '@testcontainers
 
 /**
  * Starts a real, throwaway Postgres 16 via Testcontainers for the
- * integration suite. Needs nothing pre-installed beyond Docker — same on a
+ * integration suite. Needs nothing pre-installed beyond Docker, same on a
  * laptop and on a CI runner, no docker-compose services required.
  */
 export default async function globalSetup(): Promise<void> {

@@ -21,12 +21,12 @@ interface AccountLockRow {
  * Idempotency: the idempotency_key is claimed with
  * `INSERT ... ON CONFLICT DO NOTHING`. A concurrent request with the same
  * key blocks on the unique index until the first commits, then sees the
- * conflict directly — there is no read-then-write window where two
+ * conflict directly. There is no read-then-write window where two
  * requests could both decide "not claimed yet".
  *
  * Concurrency safety: every account touched by the transfer is locked with
  * `SELECT ... FOR UPDATE`, always in ascending id order, BEFORE anything
- * else in the transaction references that account's row — including the
+ * else in the transaction references that account's row, including the
  * transfers claim insert itself, see the note on lock order below.
  */
 export async function createTransfer(fromAccountId: string, input: CreateTransferInput): Promise<TransferResult> {
@@ -58,11 +58,11 @@ export async function createTransfer(fromAccountId: string, input: CreateTransfe
     //
     // Real bug hit while writing the concurrency test: the transfers table
     // has a FK on from_account_id. Postgres enforces that FK by taking a
-    // FOR KEY SHARE lock on the referenced accounts row at INSERT time —
+    // FOR KEY SHARE lock on the referenced accounts row at INSERT time,
     // implicitly, before our code gets to run its own FOR UPDATE. Under 20
     // concurrent transfers from the same sender, each transaction's INSERT
     // grabbed KEY SHARE on the sender row, then each one asked to upgrade
-    // to FOR UPDATE for the balance check — N transactions all waiting to
+    // to FOR UPDATE for the balance check. N transactions all waiting to
     // upgrade a lock N others already hold produces a real Postgres
     // deadlock (error 40P01), not just contention. Taking the FOR UPDATE
     // explicitly first means our own transaction already holds the

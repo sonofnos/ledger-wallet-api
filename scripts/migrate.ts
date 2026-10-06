@@ -5,7 +5,7 @@ import { getPool } from '../src/db/pool';
 /**
  * Minimal forward-only migration runner: applies every .sql file in
  * /migrations, in filename order, that isn't already recorded in
- * schema_migrations. No rollback support — this is a small portfolio
+ * schema_migrations. No rollback support; this is a small portfolio
  * project, not a tool meant to manage a long-lived schema history.
  */
 export async function runMigrations(): Promise<void> {
